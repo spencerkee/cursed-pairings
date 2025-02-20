@@ -1,0 +1,3 @@
+# Contains requirements common to all environments
+# pipreqs . --print | diff requirements/common.txt -
+# pipreqs . --force --savepath requirements/common.txt

@@ -1,0 +1,5 @@
+# Specifies only dev-specific requirements
+# But imports the common ones too
+-r common.txt
+ipdb==0.13.13
+pipreqs==0.4.13
