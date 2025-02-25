@@ -7,47 +7,54 @@ import csv
 import time
 
 
-SMALL_TAG_CSV_FILENAME = 'tags_1per.csv'
-SMALL_WORK_CSV_FILENAME = 'works_1per.csv'
-LARGE_TAG_CSV_FILENAME = 'tags-20210226.csv'
-LARGE_WORK_CSV_FILENAME = 'works-20210226.csv'
-RESULTS_DIR = 'results'
-TEMP_DIR = 'temp_folder'
-DO_NOT_CARE_CHARACTERS = set([
-    "Everyone",
-    "Male Original Character(s)",
-    "Original Character",
-    "Original Character(s)",
-    "Original Character(s)",
-    "Original Character(s)",
-    "Original Characters",
-    "Original Child Character(s)",
-    "Original Female Character",
-    "Original Female Character(s)",
-    "Original Female Charcter(s)",
-    "Original Female Human Character(s)",
-    "Original Male Character",
-    "Original Male Character(s)",
-    "Original character(s)",
-    "Other(s)",
-    "Others",
-    "Reader",
-    "Undisclosed",
-    "You",
-])
+SMALL_TAG_CSV_FILENAME = "tags_1per.csv"
+SMALL_WORK_CSV_FILENAME = "works_1per.csv"
+LARGE_TAG_CSV_FILENAME = "tags-20210226.csv"
+LARGE_WORK_CSV_FILENAME = "works-20210226.csv"
+RESULTS_DIR = "results"
+TEMP_DIR = "temp_folder"
+DO_NOT_CARE_CHARACTERS = set(
+    [
+        "Everyone",
+        "Male Original Character(s)",
+        "Original Character",
+        "Original Character(s)",
+        "Original Character(s)",
+        "Original Character(s)",
+        "Original Characters",
+        "Original Child Character(s)",
+        "Original Female Character",
+        "Original Female Character(s)",
+        "Original Female Charcter(s)",
+        "Original Female Human Character(s)",
+        "Original Male Character",
+        "Original Male Character(s)",
+        "Original character(s)",
+        "Other(s)",
+        "Others",
+        "Reader",
+        "Undisclosed",
+        "You",
+    ]
+)
 
-def get_pairing(slash_pairing, ):
-    if '/' in slash_pairing and '&' in slash_pairing:
-        raise ValueError(f'Relationship tag contains both / and & {slash_pairing}')
-    if '/' not in slash_pairing and '&' not in slash_pairing:
-        raise ValueError(f'Relationship tag contains neither / or & {slash_pairing}')
-    if slash_pairing.count('/') > 1 or slash_pairing.count('&') > 1:
+
+def get_pairing(
+    slash_pairing,
+):
+    if "/" in slash_pairing and "&" in slash_pairing:
+        raise ValueError(f"Relationship tag contains both / and & {slash_pairing}")
+    if "/" not in slash_pairing and "&" not in slash_pairing:
+        raise ValueError(f"Relationship tag contains neither / or & {slash_pairing}")
+    if slash_pairing.count("/") > 1 or slash_pairing.count("&") > 1:
         # Jack Harkness/Ianto Jones/Toshiko Sato
-        raise ValueError(f'Relationship tag contains more than one / or & {slash_pairing}')
-    if '/' in slash_pairing:
-        return [i.strip() for i in slash_pairing.split('/')]
-    if '&' in slash_pairing:
-        return [i.strip() for i in slash_pairing.split('&')]
+        raise ValueError(
+            f"Relationship tag contains more than one / or & {slash_pairing}"
+        )
+    if "/" in slash_pairing:
+        return [i.strip() for i in slash_pairing.split("/")]
+    if "&" in slash_pairing:
+        return [i.strip() for i in slash_pairing.split("&")]
 
 
 def get_edge_attributes(G, name):
@@ -55,16 +62,19 @@ def get_edge_attributes(G, name):
     edges = G.edges(data=True)
     return edges
 
+
 def print_pairings(pairings):
     for similiarity, node1, node2 in pairings:
         print(f"{similiarity:.4f} {node1} / {node2}")
+
 
 def main(
     use_small_csv=True,
     num_workers=4,
     ship_separators=("/", "&"),
     accept_more_than_2=False,
-    quiet=True):
+    quiet=True,
+):
     if use_small_csv:
         tag_filename = SMALL_TAG_CSV_FILENAME
         work_filename = SMALL_WORK_CSV_FILENAME
@@ -77,23 +87,23 @@ def main(
         pairing_id_to_count = defaultdict(int)
         pairing_id_to_row = {}
         for ind, row in enumerate(reader):
-            if row['type'] != 'Relationship':
+            if row["type"] != "Relationship":
                 continue
-            canonical = row['canonical']
+            canonical = row["canonical"]
             # TODO Handle redacted merging better
             # if row['name'] == 'Redacted' and canonical == 'false':
             #     pairing_id_to_count[row['merger_id']] += int(row['cached_count'])
             #     continue
 
-            if int(row['cached_count']) == 0:
+            if int(row["cached_count"]) == 0:
                 continue
 
             # print(row)
-            if canonical == 'true':
-                pairing_id_to_row[row['id']] = row
-                pairing_id_to_count[row['id']] += int(row['cached_count'])
+            if canonical == "true":
+                pairing_id_to_row[row["id"]] = row
+                pairing_id_to_count[row["id"]] += int(row["cached_count"])
             else:
-                pairing_id_to_count[row['merger_id']] += int(row['cached_count'])
+                pairing_id_to_count[row["merger_id"]] += int(row["cached_count"])
             # if ind > 50:
             #     break
 
@@ -101,7 +111,7 @@ def main(
     for pairing_id, count in pairing_id_to_count.items():
         if pairing_id not in pairing_id_to_row:
             continue
-        relationship_name = pairing_id_to_row[pairing_id]['name']
+        relationship_name = pairing_id_to_row[pairing_id]["name"]
         try:
             characters = get_pairing(relationship_name)
         except ValueError as e:
@@ -119,10 +129,10 @@ def main(
     print(f"number_of_edges={G.number_of_edges()}")
 
     # Check for weight=0 edges
-    print('0 weight edges: (if any)')
-    var = get_edge_attributes(G, 'weight')
+    print("0 weight edges: (if any)")
+    var = get_edge_attributes(G, "weight")
     for edge in var:
-        if edge[2]['weight'] == 0:
+        if edge[2]["weight"] == 0:
             print(edge)
 
     # Precompute probabilities and generate walks
@@ -137,7 +147,12 @@ def main(
     node2vec = Node2Vec(
         G,
         dimensions=64,
-        walk_length=20, num_walks=10, workers=num_workers, temp_folder=TEMP_DIR, quiet=quiet)
+        walk_length=20,
+        num_walks=10,
+        workers=num_workers,
+        temp_folder=TEMP_DIR,
+        quiet=quiet,
+    )
     node2vec_time = time.time()
     print(f"node2vec duration={node2vec_time-start_time}")
 
@@ -158,9 +173,9 @@ def main(
     cosine_similarity_time = time.time()
     print(f"cosine similarity duration={cosine_similarity_time-embed_time}")
 
-    print('Least cursed (unique) pairings (in terms of vector distance)')
+    print("Least cursed (unique) pairings (in terms of vector distance)")
     print_pairings(cosine_similarities[:10])
-    print('Most cursed pairings (in terms of vector distance)')
+    print("Most cursed pairings (in terms of vector distance)")
     print_pairings(cosine_similarities[-9:])
 
     timestr = time.strftime("%Y-%m-%d_%H:%M:%S")
@@ -169,23 +184,41 @@ def main(
 
     output = []
     for similiarity, node1, node2 in cosine_similarities:
-        output.append({
-            'cosine_similarity': f"{similiarity:.4f}",
-            'node1': node1,
-            'node2': node2,
-            'relationship_count': G[node1][node2]['weight'],
-            'node1_indegree': G.degree(node1),
-            'node2_indegree': G.degree(node2),
-        })
+        output.append(
+            {
+                "cosine_similarity": f"{similiarity:.4f}",
+                "node1": node1,
+                "node2": node2,
+                "relationship_count": G[node1][node2]["weight"],
+                "node1_indegree": G.degree(node1),
+                "node2_indegree": G.degree(node2),
+            }
+        )
 
-    with open(f"{RESULTS_DIR}/{timestr}.csv", 'w', newline='\n') as csvfile:
-        fieldnames = ['cosine_similarity', 'node1', 'node2', 'relationship_count', 'node1_indegree', 'node2_indegree']
-        writer = csv.DictWriter(csvfile, delimiter=",", fieldnames=fieldnames, quoting=csv.QUOTE_ALL)
+    with open(f"{RESULTS_DIR}/{timestr}.csv", "w", newline="\n") as csvfile:
+        fieldnames = [
+            "cosine_similarity",
+            "node1",
+            "node2",
+            "relationship_count",
+            "node1_indegree",
+            "node2_indegree",
+        ]
+        writer = csv.DictWriter(
+            csvfile, delimiter=",", fieldnames=fieldnames, quoting=csv.QUOTE_ALL
+        )
         writer.writeheader()
         writer.writerows(output)
     # TODO quoting=csv.QUOTE_ALL
     # 26 minutes for the full file
     # 19.5 min
 
-if __name__ == '__main__':
-    main(use_small_csv=False, num_workers=8, ship_separators=['/'], accept_more_than_2=False, quiet=True)
+
+if __name__ == "__main__":
+    main(
+        use_small_csv=False,
+        num_workers=8,
+        ship_separators=["/"],
+        accept_more_than_2=False,
+        quiet=True,
+    )
