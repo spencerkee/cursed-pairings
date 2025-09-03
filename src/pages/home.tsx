@@ -1,6 +1,6 @@
 import { createOptions, Select } from "@thisbeyond/solid-select";
 import "@thisbeyond/solid-select/style.css";
-import { createEffect, createSignal, For } from "solid-js";
+import { createEffect, createSignal, For, Show } from "solid-js";
 
 export default function Home() {
   const [selectedChar, setSelectedChar] = createSignal(null);
@@ -9,10 +9,6 @@ export default function Home() {
   createEffect(() => {
     console.log('selectedChar', selectedChar());
   });
-
-  // const handleSelect = (obj) => {
-  //   console.log(obj);
-  // }
 
   let DATA_OBJ = new Map([
     ["apple", { partners: ["banana", "pear"] }],
@@ -35,29 +31,32 @@ export default function Home() {
   return (
     <>
       <Select {...props} onChange={(obj) => setSelectedChar(obj)} />
-      <div class="overflow-x-auto rounded-box border border-base-content/5 bg-base-100">
-        <table class="table">
-          <thead>
-            <tr>
-              <th></th>
-              <th>Name</th>
-              {/* <th>Job</th>
-              <th>Favorite Color</th> */}
-            </tr>
-          </thead>
-          <tbody>
-            <For each={selectedPartners()}>
-              {(partner, i) =>
-                <tr>
-                  <th>{i() + 1}</th>
-                  <td>{partner}</td>
-                </tr>
-              }
-            </For>
-          </tbody>
-        </table>
-      </div>
+      <Show
+        when={selectedPartners().length > 0}
+      // fallback={<div class="mt-4">No partners selected</div>}
+      >
+        <div class="overflow-x-auto rounded-box border border-base-content/5 bg-base-100">
+          <table class="table">
+            <thead>
+              <tr>
+                <th></th>
+                <th>Name</th>
+              </tr>
+            </thead>
+            <tbody>
+              <For each={selectedPartners()}>
+                {(partner, i) =>
+                  <tr>
+                    <th>{i() + 1}</th>
+                    <td>{partner}</td>
+                  </tr>
+                }
+              </For>
+            </tbody>
+          </table>
+        </div>
+      </Show>
+
     </>
   )
-  // onChange={(e) => console.log(e)}
 }
