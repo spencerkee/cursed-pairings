@@ -1,0 +1,52 @@
+{
+    "characters": [
+        [
+            "Alice",
+            {
+                "degree": 8,
+                "pairings": [
+                    [
+                        "Bob",
+                        5
+                    ],
+                    [
+                        "Charlie",
+                        3
+                    ]
+                ]
+            }
+        ],
+        [
+            "Bob",
+            {
+                "degree": 6,
+                "pairings": [
+                    [
+                        "Alice",
+                        5
+                    ],
+                    [
+                        "David",
+                        4
+                    ]
+                ]
+            }
+        ],
+        [
+            "Charlie",
+            {
+                "degree": 4,
+                "pairings": [
+                    [
+                        "Alice",
+                        3
+                    ],
+                    [
+                        "Eve",
+                        2
+                    ]
+                ]
+            }
+        ]
+    ]
+}
