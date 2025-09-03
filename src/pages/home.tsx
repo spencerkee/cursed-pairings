@@ -31,35 +31,32 @@ export default function Home() {
     }
   });
 
-  // debugger;
   const props = createOptions(Array.from(DATA_OBJ.keys()));
   return (
     <>
       <Select {...props} onChange={(obj) => setSelectedChar(obj)} />
-      <For each={selectedPartners()}>
-        {(item) => <div>{item}</div>}
-      </For>
-      {/* <button class="btn">Button</button> */}
-      {/* <div class="overflow-x-auto rounded-box border border-base-content/5 bg-base-100">
+      <div class="overflow-x-auto rounded-box border border-base-content/5 bg-base-100">
         <table class="table">
           <thead>
             <tr>
               <th></th>
               <th>Name</th>
-              <th>Job</th>
-              <th>Favorite Color</th>
+              {/* <th>Job</th>
+              <th>Favorite Color</th> */}
             </tr>
           </thead>
           <tbody>
-            <tr>
-              <th>1</th>
-              <td>Cy Ganderton</td>
-              <td>Quality Control Specialist</td>
-              <td>Blue</td>
-            </tr>
+            <For each={selectedPartners()}>
+              {(partner, i) =>
+                <tr>
+                  <th>{i() + 1}</th>
+                  <td>{partner}</td>
+                </tr>
+              }
+            </For>
           </tbody>
         </table>
-      </div> */}
+      </div>
     </>
   )
   // onChange={(e) => console.log(e)}
