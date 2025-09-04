@@ -28,7 +28,6 @@ export default function Home() {
     initial: Array.from(DATA_OBJ.keys()).slice(0, 10),
   };
   const [activeSet, setActiveSet] = createSignal("initial");
-  // const [activeOptions, setActiveOptions] = createSignal(optionSets[activeSet()]);
 
   createEffect(() => {
     console.log('selectedChar', selectedChar());
@@ -41,7 +40,7 @@ export default function Home() {
   });
   createEffect(() => {
     console.log('activeSet', activeSet());
-    setActiveOptions(optionSets[activeSet()]);
+    // setActiveOptions(optionSets[activeSet()]);
   });
 
 
@@ -102,14 +101,15 @@ export default function Home() {
         when={selectedPartners()?.length > 0}
       // fallback={<div class="mt-4">No partners selected</div>}
       >
-        <div class="overflow-x-auto rounded-box border border-base-content/5 bg-base-100">
-          <table class="table">
+        <div class="overflow-x-auto rounded-box border border-base-content/5 bg-base-100 lg:w-3/5 md:w-full " >
+          <table class="table table-zebra">
             <thead>
               <tr>
                 <th></th>
                 <th>Name</th>
                 <th>Times Paired</th>
                 <th>Similarity</th>
+                <th>Most Common Fandom</th>
               </tr>
             </thead>
             <tbody>
@@ -120,6 +120,7 @@ export default function Home() {
                     <td>{pairing.n}</td>
                     <td>{pairing.w}</td>
                     <td>{pairing.s}</td>
+                    <td>{pairing.f}</td>
                   </tr>
                 }
               </For>
@@ -127,7 +128,6 @@ export default function Home() {
           </table>
         </div>
       </Show>
-
     </>
   )
 }
