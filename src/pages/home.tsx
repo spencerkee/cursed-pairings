@@ -8,8 +8,11 @@ function createDataObj() {
   // TODO Handle failures gracefully
   let characters = jsonData["characters"];
   for (let item of characters) {
-    let [name, data] = item;
-    dataObj.set(name, data);
+    let data = {
+      degree: item.d,
+      pairings: item.p
+    }
+    dataObj.set(item.n, data);
   }
   return dataObj;
 }
@@ -36,7 +39,7 @@ export default function Home() {
   const props = createOptions(Array.from(DATA_OBJ.keys()));
   return (
     <>
-      <Select {...props} onChange={(obj) => setSelectedChar(obj)} />
+      <Select {...props} onChange={(obj) => setSelectedChar(obj)} class="m-4 w-96" />
       <Show
         when={selectedPartners()?.length > 0}
       // fallback={<div class="mt-4">No partners selected</div>}
@@ -47,6 +50,7 @@ export default function Home() {
               <tr>
                 <th></th>
                 <th>Name</th>
+                <th>Times Paired</th>
                 <th>Similarity</th>
               </tr>
             </thead>
@@ -55,8 +59,9 @@ export default function Home() {
                 {(pairing, i) =>
                   <tr>
                     <th>{i() + 1}</th>
-                    <td>{pairing[0]}</td>
-                    <td>{pairing[1]}</td>
+                    <td>{pairing.n}</td>
+                    <td>{pairing.w}</td>
+                    <td>{pairing.s}</td>
                   </tr>
                 }
               </For>
