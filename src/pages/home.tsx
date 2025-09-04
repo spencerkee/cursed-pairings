@@ -21,13 +21,17 @@ export default function Home() {
   const [selectedChar, setSelectedChar] = createSignal(null);
   const [selectedPartners, setSelectedPartners] = createSignal([]);
 
-  createEffect(() => {
-    console.log('selectedChar', selectedChar());
-  });
-
   let DATA_OBJ = createDataObj();
 
+  const optionSets = {
+    full: Array.from(DATA_OBJ.keys()),
+    initial: Array.from(DATA_OBJ.keys()).slice(0, 10),
+  };
+  const [activeSet, setActiveSet] = createSignal("initial");
+  // const [activeOptions, setActiveOptions] = createSignal(optionSets[activeSet()]);
+
   createEffect(() => {
+    console.log('selectedChar', selectedChar());
     if (selectedChar()) {
       let partners = DATA_OBJ.get(selectedChar()).pairings;
       setSelectedPartners(partners);
@@ -35,15 +39,21 @@ export default function Home() {
       setSelectedPartners([]);
     }
   });
+  createEffect(() => {
+    console.log('activeSet', activeSet());
+    setActiveOptions(optionSets[activeSet()]);
+  });
+
 
   const customFuzzySort = (searchString, options, valueFields) => {
+    // TODO This is hit multiple times for some reason
+    console.log("searchString", searchString);
     const sorted = [];
 
     for (let index = 0; index < options.length; index++) {
       const option = options[index];
       const fieldResults = valueFields.reduce(
         (map, target) => {
-          // map.set(target, fuzzySearch(searchString, option.value[target]))
           return map.set(target, fuzzySearch(searchString, option.value))
         },
         new Map(),
@@ -65,12 +75,29 @@ export default function Home() {
     );
 
   const props = createOptions(
-    Array.from(DATA_OBJ.keys()),
+    () => optionSets[activeSet()],
     { filterable }
   );
   return (
     <>
-      <Select {...props} onChange={(obj) => setSelectedChar(obj)} class="m-4 w-96" />
+      <Select
+        onChange={(obj) => {
+          console.log('onChange', obj);
+          setSelectedChar(obj);
+        }}
+        onInput={(obj) => {
+          console.log('onInput start', obj);
+          if (obj) {
+            console.log('onInput full');
+            setActiveSet("full");
+          } else {
+            setActiveSet("initial");
+            console.log('onInput initial');
+          }
+        }}
+        class="m-4 w-96"
+        {...props}
+      />
       <Show
         when={selectedPartners()?.length > 0}
       // fallback={<div class="mt-4">No partners selected</div>}
