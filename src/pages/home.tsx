@@ -1,4 +1,4 @@
-import { createOptions, Select } from "@thisbeyond/solid-select";
+import { createOptions, fuzzySearch, Select } from "@thisbeyond/solid-select";
 import "@thisbeyond/solid-select/style.css";
 import { createEffect, createSignal, For, Show } from "solid-js";
 import jsonData from '../resources/data.json' with { type: 'json' };
@@ -36,7 +36,38 @@ export default function Home() {
     }
   });
 
-  const props = createOptions(Array.from(DATA_OBJ.keys()));
+  const customFuzzySort = (searchString, options, valueFields) => {
+    const sorted = [];
+
+    for (let index = 0; index < options.length; index++) {
+      const option = options[index];
+      const fieldResults = valueFields.reduce(
+        (map, target) => {
+          // map.set(target, fuzzySearch(searchString, option.value[target]))
+          return map.set(target, fuzzySearch(searchString, option.value))
+        },
+        new Map(),
+      );
+
+      let score = 0;
+      for (const [, result] of fieldResults) score += result.score;
+      if (score) sorted.push({ score, option, index, fieldResults });
+    }
+    sorted.sort((a, b) => b.score - a.score || a.index - b.index);
+    return sorted.slice(0, 10);
+  };
+
+  const filterable = (inputValue, options) =>
+    customFuzzySort(inputValue, options, ["n"]).map(
+      (result) => ({
+        ...result.option,
+      }),
+    );
+
+  const props = createOptions(
+    Array.from(DATA_OBJ.keys()),
+    { filterable }
+  );
   return (
     <>
       <Select {...props} onChange={(obj) => setSelectedChar(obj)} class="m-4 w-96" />
