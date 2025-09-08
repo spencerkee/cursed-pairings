@@ -79,6 +79,7 @@ export default function Home() {
   );
   return (
     <>
+      <h3 class="text-2xl">Find fanfiction character's pairings (least cursed first)</h3>
       <Select
         onChange={(obj) => {
           console.log('onChange', obj);
@@ -101,6 +102,7 @@ export default function Home() {
         when={selectedPartners()?.length > 0}
       // fallback={<div class="mt-4">No partners selected</div>}
       >
+        <h4 class="text-lg">{selectedChar()} has been paired with:</h4>
         <div class="overflow-x-auto rounded-box border border-base-content/5 bg-base-100 lg:w-3/5 md:w-full " >
           <table class="table table-zebra">
             <thead>
