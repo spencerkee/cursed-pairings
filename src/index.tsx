@@ -1,11 +1,30 @@
-/* @refresh reload */
-import './index.css';
+// /* @refresh reload */
+// import './index.css';
 
+// import { render } from 'solid-js/web';
+
+// import { Router } from '@solidjs/router';
+// import App from './app';
+// import { routes } from './routes';
+
+// const root = document.getElementById('root');
+
+// if (import.meta.env.DEV && !(root instanceof HTMLElement)) {
+//   throw new Error(
+//     'Root element not found. Did you forget to add it to your index.html? Or maybe the id attribute got misspelled?',
+//   );
+// }
+
+// render(
+//   () => <Router base={import.meta.env.SERVER_BASE_URL} root={(props) => <App>{props.children}</App>}>{routes}</Router>,
+//   root,
+// );
+
+/* @refresh reload */
 import { render } from 'solid-js/web';
 
-import { Router } from '@solidjs/router';
 import App from './app';
-import { routes } from './routes';
+import './index.css';
 
 const root = document.getElementById('root');
 
@@ -15,7 +34,4 @@ if (import.meta.env.DEV && !(root instanceof HTMLElement)) {
   );
 }
 
-render(
-  () => <Router base={import.meta.env.SERVER_BASE_URL} root={(props) => <App>{props.children}</App>}>{routes}</Router>,
-  root,
-);
+render(() => <App />, root);
