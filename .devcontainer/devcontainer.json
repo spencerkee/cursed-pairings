@@ -1,8 +1,4 @@
 {
     "image": "mcr.microsoft.com/devcontainers/universal:2",
-    "postStartCommand": [
-        "npm",
-        "run",
-        "dev"
-    ]
+    "postAttachCommand": "nohup npm run dev &"
 }

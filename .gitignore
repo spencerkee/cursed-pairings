@@ -21,7 +21,8 @@ app.config.timestamp_*.js
 .settings/
 
 # Temp
-gitignore
+.gitignore
+nohup.out
 
 # System Files
 .DS_Store
