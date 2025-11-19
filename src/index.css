@@ -1,3 +1,42 @@
 @import 'tailwindcss';
 
-@plugin "daisyui";
+@plugin "daisyui" {
+
+    themes: light, dark --prefersdark --default;
+
+}
+
+.custom {
+    &.solid-select-container {
+        /* typed text */
+        color: var(--color-base-content);
+        background-color: var(--color-base-300);
+    }
+
+    .solid-select-control {
+        /* border of the select */
+        border-color: var(--color-accent);
+
+        /* &:focus-within {
+            outline-color: var(--color-error);
+        } */
+    }
+
+    .solid-select-placeholder {
+        color: var(--color-base-content);
+    }
+
+    .solid-select-option {
+        &:hover {
+            /* background color of the hovered option */
+            background-color: var(--color-accent);
+            color: var(--color-base-content);
+        }
+
+        /* color of the option that will search if you press enter */
+        &[data-focused="true"] {
+            background-color: var(--color-accent-content);
+            /* color: #fff; */
+        }
+    }
+}

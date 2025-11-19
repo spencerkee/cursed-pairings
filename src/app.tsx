@@ -81,6 +81,7 @@ export default function Home() {
     <>
       <h3 class="text-2xl">Find fanfiction character's pairings (least cursed first)</h3>
       <Select
+        class="custom m-4 w-96"
         onChange={(obj) => {
           console.log('onChange', obj);
           setSelectedChar(obj);
@@ -95,7 +96,6 @@ export default function Home() {
             console.log('onInput initial');
           }
         }}
-        class="m-4 w-96"
         {...props}
       />
       <Show
